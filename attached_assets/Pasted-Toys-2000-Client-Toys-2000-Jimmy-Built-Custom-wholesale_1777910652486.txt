@@ -1,0 +1,34 @@
+Toys 2000
+Client: Toys 2000 (Jimmy)
+Built: Custom wholesale ordering platform on top of the MarketTime API — catalog sync, bulk cart with case-pack enforcement, order submission, customer accounts, and admin dashboard.
+Status: Currently in development.
+
+Life Saver Pool Fence
+Client: Life Saver Pool Fence
+Built: Two systems — (1) a Gravity Forms → Pipedream → Calendly lead routing system that matches ZIP codes to franchise-specific booking pages with prefilled fields, and (2) a full Zapier-to-Pipedream migration replicating their entire lead routing workflow with ClickUp task creation, Mailchimp, and SendGrid.
+Outcome: Completed and live.
+
+Avology
+Client: Avology (internal venture)
+Built: Multi-phase Pipedrive + SharePoint + Jetbuilt automation — sequential project numbering, structured folder creation, deal-stage triggers, and cross-system sync with webhook loop prevention.
+Outcome: Completed.
+
+Secure2Send
+Client: Secure2Send (internal venture)
+Built: Document management and merchant onboarding platform — AES-256-GCM field-level encryption, Cloudflare R2 storage, DocuSeal e-signature (self-hosted on Railway), SOC 2 audit logging, OCR/AI document processing via GPT-4 Vision, and UAT feedback pipeline via ClickUp Forms.
+Status: Nearly complete.
+
+Metrc API Certification
+Client: Enforc AI (cannabis compliance context)
+Built: Full certification study package — comprehensive study guide, quiz, and video script built from the Metrc manual with page-cited references, focused on read-only GET endpoints for financial reconciliation.
+Outcome: Certification completed.
+
+Trial Killer
+Client: SmartClick (internal)
+Built: Chrome extension with Google OAuth and Mailgun integration for tracking and managing free trial subscriptions.
+Status: On hold.
+
+LendingPad Dashboard
+Client: Prospective (surfaced via Toys 2000 client network)
+Built: Not yet started — scoped as an Excel-based mortgage pipeline rebuilt as a web app connected to the LendingPad API, with a productization/SaaS path.
+Status: On hold, pending kickoff.
