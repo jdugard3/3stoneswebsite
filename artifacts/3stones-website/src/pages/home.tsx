@@ -7,8 +7,41 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
+type FormState = "idle" | "submitting" | "success" | "error";
+
 export default function Home() {
   const [activeSection, setActiveSection] = useState("hero");
+  const [formState, setFormState] = useState<FormState>("idle");
+  const [formError, setFormError] = useState("");
+  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm(prev => ({ ...prev, [e.target.id]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormState("submitting");
+    setFormError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setFormError(data.error || "Submission failed. Please try again.");
+        setFormState("error");
+        return;
+      }
+      setFormState("success");
+      setForm({ name: "", email: "", phone: "", message: "" });
+    } catch {
+      setFormError("Connection error. Please try again.");
+      setFormState("error");
+    }
+  };
 
   useEffect(() => {
     // Add dark class to document
@@ -292,6 +325,10 @@ export default function Home() {
                     <a href="mailto:contact@3stonesservices.com">contact@3stonesservices.com</a>
                   </div>
                   <div className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
+                    <Phone className="h-6 w-6" />
+                    <a href="tel:+17863007374">786-300-7374</a>
+                  </div>
+                  <div className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
                     <Code className="h-6 w-6" />
                     <span>Based in the US</span>
                   </div>
@@ -299,33 +336,85 @@ export default function Home() {
               </div>
               
               <div className="bg-card p-8 border border-primary/20 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-                <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="font-mono text-xs text-primary">NAME</Label>
-                      <Input id="name" placeholder="John Doe" className="bg-black/50 border-primary/20 focus-visible:ring-primary font-mono rounded-none" />
+                {formState === "success" ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex flex-col items-center justify-center h-full min-h-[320px] text-center space-y-6"
+                  >
+                    <CheckCircle className="h-16 w-16 text-primary" />
+                    <div>
+                      <p className="font-mono text-primary text-lg font-bold mb-2">TRANSMISSION_RECEIVED</p>
+                      <p className="text-muted-foreground font-mono text-sm">We'll be in touch shortly.</p>
+                    </div>
+                    <button
+                      onClick={() => setFormState("idle")}
+                      className="font-mono text-xs text-muted-foreground hover:text-primary underline transition-colors"
+                    >
+                      Send another message
+                    </button>
+                  </motion.div>
+                ) : (
+                  <form className="space-y-6" onSubmit={handleSubmit}>
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="name" className="font-mono text-xs text-primary">NAME</Label>
+                        <Input
+                          id="name"
+                          placeholder="John Doe"
+                          value={form.name}
+                          onChange={handleChange}
+                          required
+                          className="bg-black/50 border-primary/20 focus-visible:ring-primary font-mono rounded-none"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email" className="font-mono text-xs text-primary">EMAIL</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="john@company.com"
+                          value={form.email}
+                          onChange={handleChange}
+                          required
+                          className="bg-black/50 border-primary/20 focus-visible:ring-primary font-mono rounded-none"
+                        />
+                      </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="font-mono text-xs text-primary">EMAIL</Label>
-                      <Input id="email" type="email" placeholder="john@company.com" className="bg-black/50 border-primary/20 focus-visible:ring-primary font-mono rounded-none" />
+                      <Label htmlFor="phone" className="font-mono text-xs text-primary">PHONE</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="(786) 555-1234"
+                        value={form.phone}
+                        onChange={handleChange}
+                        className="bg-black/50 border-primary/20 focus-visible:ring-primary font-mono rounded-none"
+                      />
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="font-mono text-xs text-primary">PHONE</Label>
-                    <Input id="phone" type="tel" placeholder="(555) 555-5555" className="bg-black/50 border-primary/20 focus-visible:ring-primary font-mono rounded-none" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="message" className="font-mono text-xs text-primary">PROJECT_SPECS</Label>
-                    <Textarea 
-                      id="message" 
-                      placeholder="Describe your workflow bottlenecks..." 
-                      className="min-h-[150px] bg-black/50 border-primary/20 focus-visible:ring-primary font-mono rounded-none resize-none" 
-                    />
-                  </div>
-                  <Button type="button" className="w-full font-mono text-lg rounded-none border border-primary bg-primary/10 text-primary hover:bg-primary hover:text-black transition-all shadow-[0_0_15px_rgba(20,255,0,0.1)] h-14">
-                    TRANSMIT_DATA
-                  </Button>
-                </form>
+                    <div className="space-y-2">
+                      <Label htmlFor="message" className="font-mono text-xs text-primary">PROJECT_SPECS</Label>
+                      <Textarea
+                        id="message"
+                        placeholder="Describe your workflow bottlenecks..."
+                        value={form.message}
+                        onChange={handleChange}
+                        required
+                        className="min-h-[150px] bg-black/50 border-primary/20 focus-visible:ring-primary font-mono rounded-none resize-none"
+                      />
+                    </div>
+                    {formState === "error" && (
+                      <p className="font-mono text-xs text-red-400">{formError}</p>
+                    )}
+                    <Button
+                      type="submit"
+                      disabled={formState === "submitting"}
+                      className="w-full font-mono text-lg rounded-none border border-primary bg-primary/10 text-primary hover:bg-primary hover:text-black transition-all shadow-[0_0_15px_rgba(20,255,0,0.1)] h-14 disabled:opacity-50"
+                    >
+                      {formState === "submitting" ? "TRANSMITTING..." : "TRANSMIT_DATA"}
+                    </Button>
+                  </form>
+                )}
               </div>
             </div>
           </div>
