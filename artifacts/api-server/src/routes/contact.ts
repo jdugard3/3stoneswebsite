@@ -5,6 +5,16 @@ import { SubmitContactBody, SubmitContactResponse } from "@workspace/api-zod";
 
 const router: IRouter = Router();
 
+/** Escape user-controlled strings before interpolating into notification HTML. */
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function createTransporter() {
   const host = process.env.SMTP_HOST;
   const user = process.env.SMTP_USER;
@@ -38,11 +48,18 @@ router.post("/contact", async (req, res) => {
     return;
   }
 
+  // Notifications require SMTP_* secrets in the Replit/deployment environment.
+  // Without them, submissions are still stored in Postgres (contact_submissions).
   const contactEmail = process.env.CONTACT_EMAIL || "contact@3stonesservices.com";
   const transporter = createTransporter();
 
   if (transporter) {
     try {
+      const safeName = escapeHtml(name);
+      const safeEmail = escapeHtml(email);
+      const safePhone = escapeHtml(phone || "—");
+      const safeMessage = escapeHtml(message);
+
       await transporter.sendMail({
         from: `"3 Stones Services" <${process.env.SMTP_USER}>`,
         to: contactEmail,
@@ -52,10 +69,10 @@ router.post("/contact", async (req, res) => {
           <div style="font-family: monospace; background: #0a0a0a; color: #39ff14; padding: 24px; border: 1px solid #39ff14;">
             <h2 style="margin: 0 0 16px; color: #39ff14;">NEW CONTACT SUBMISSION</h2>
             <table style="width: 100%; border-collapse: collapse; color: #ccc;">
-              <tr><td style="padding: 8px 0; color: #39ff14; width: 100px;">NAME</td><td>${name}</td></tr>
-              <tr><td style="padding: 8px 0; color: #39ff14;">EMAIL</td><td><a href="mailto:${email}" style="color: #39ff14;">${email}</a></td></tr>
-              <tr><td style="padding: 8px 0; color: #39ff14;">PHONE</td><td>${phone || "—"}</td></tr>
-              <tr><td style="padding: 8px 0; color: #39ff14; vertical-align: top;">MESSAGE</td><td style="white-space: pre-wrap;">${message}</td></tr>
+              <tr><td style="padding: 8px 0; color: #39ff14; width: 100px;">NAME</td><td>${safeName}</td></tr>
+              <tr><td style="padding: 8px 0; color: #39ff14;">EMAIL</td><td><a href="mailto:${safeEmail}" style="color: #39ff14;">${safeEmail}</a></td></tr>
+              <tr><td style="padding: 8px 0; color: #39ff14;">PHONE</td><td>${safePhone}</td></tr>
+              <tr><td style="padding: 8px 0; color: #39ff14; vertical-align: top;">MESSAGE</td><td style="white-space: pre-wrap;">${safeMessage}</td></tr>
             </table>
             <p style="margin: 16px 0 0; color: #555; font-size: 12px;">Submitted via 3stonesservices.com</p>
           </div>
