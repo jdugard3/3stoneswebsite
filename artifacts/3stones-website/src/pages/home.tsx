@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Typewriter } from "@/components/typewriter";
 
 type FormState = "idle" | "submitting" | "success" | "error";
 
@@ -167,16 +168,26 @@ export default function Home() {
             </div>
 
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500 max-w-5xl leading-tight">
-              WE BUILD THE{" "}
-              <span className="text-primary bg-none drop-shadow-[0_0_15px_rgba(20,255,0,0.3)]">
-                AUTOMATION LAYER
-              </span>{" "}
-              BETWEEN YOUR TOOLS AND YOUR GOALS.
+              <span className="block">WE BUILD THE</span>
+              <span className="mt-1 block min-h-[1.15em] text-primary bg-none drop-shadow-[0_0_15px_rgba(20,255,0,0.3)]">
+                <Typewriter
+                  phrases={[
+                    "AUTOMATION LAYER",
+                    "WEBSITE DESIGN",
+                    "WEB APPLICATIONS",
+                    "WORKFLOW SYSTEMS",
+                    "AI INTEGRATIONS",
+                  ]}
+                />
+              </span>
+              <span className="mt-3 block text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500">
+                FOR BUSINESSES READY TO SCALE.
+              </span>
             </h1>
 
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl font-mono leading-relaxed">
-              Precision engineering for complex workflows. We eliminate manual
-              steps so your business can scale.
+              Websites, automation, and AI — engineered to connect your tools,
+              cut manual work, and help your business grow.
             </p>
 
             <div className="pt-8 flex flex-wrap gap-6">
@@ -213,8 +224,8 @@ export default function Home() {
               {[
                 {
                   icon: <Server className="h-10 w-10 text-primary mb-6" />,
-                  title: "Custom Web Applications",
-                  desc: "Bespoke full-stack platforms built to fit your exact workflow. No bloated templates, just clean, secure code that works.",
+                  title: "Website Design & Web Apps",
+                  desc: "Marketing sites and bespoke full-stack platforms built to fit your brand and workflow. No bloated templates — clean, secure code that converts and scales.",
                 },
                 {
                   icon: <Zap className="h-10 w-10 text-primary mb-6" />,
