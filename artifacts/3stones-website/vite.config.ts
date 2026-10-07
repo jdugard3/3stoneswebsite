@@ -66,6 +66,14 @@ export default defineConfig({
     fs: {
       strict: true,
     },
+    // Local/dev without Replit's path router: forward /api to the API server.
+    // On Replit, the application router already maps /api → api-server (port 8080).
+    proxy: {
+      "/api": {
+        target: process.env.API_PROXY_TARGET || "http://127.0.0.1:8080",
+        changeOrigin: true,
+      },
+    },
   },
   preview: {
     port,
