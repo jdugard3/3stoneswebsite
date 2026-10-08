@@ -12,7 +12,7 @@
     "api": {
       "root": "artifacts/api-server",
       "framework": "express",
-      "entrypoint": "src/app.ts",
+      "entrypoint": "src/index.ts",
       "installCommand": "npx pnpm@12.10.1 install --frozen-lockfile"
     }
   },
