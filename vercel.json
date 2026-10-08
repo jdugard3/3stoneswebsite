@@ -1,6 +1,23 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": null,
-  "installCommand": "npx pnpm@12.10.1 install --frozen-lockfile",
-  "buildCommand": "npx pnpm@12.10.1 run vercel-build"
+  "services": {
+    "website": {
+      "root": "artifacts/3stones-website",
+      "framework": "vite",
+      "installCommand": "npx pnpm@12.10.1 install --frozen-lockfile",
+      "buildCommand": "npx pnpm@12.10.1 run build",
+      "outputDirectory": "dist/public",
+      "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+    },
+    "api": {
+      "root": "artifacts/api-server",
+      "framework": "express",
+      "entrypoint": "src/app.ts",
+      "installCommand": "npx pnpm@12.10.1 install --frozen-lockfile"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": { "service": "api" } },
+    { "source": "/(.*)", "destination": { "service": "website" } }
+  ]
 }
