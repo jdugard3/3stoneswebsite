@@ -50,7 +50,7 @@ router.post("/contact", async (req, res) => {
 
   // Notifications require SMTP_* secrets in the Replit/deployment environment.
   // Without them, submissions are still stored in Postgres (contact_submissions).
-  const contactEmail = process.env.CONTACT_EMAIL || "contact@3stonesservices.com";
+  const contactEmail = process.env.CONTACT_EMAIL || "3.stones.services@gmail.com";
   const transporter = createTransporter();
 
   if (transporter) {

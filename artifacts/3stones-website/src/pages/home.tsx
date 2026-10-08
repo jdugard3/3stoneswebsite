@@ -416,8 +416,8 @@ export default function Home() {
                 <div className="space-y-6 font-mono text-lg">
                   <div className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
                     <Mail className="h-6 w-6" />
-                    <a href="mailto:contact@3stonesservices.com">
-                      contact@3stonesservices.com
+                    <a href="mailto:3.stones.services@gmail.com">
+                      3.stones.services@gmail.com
                     </a>
                   </div>
                   <div className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
