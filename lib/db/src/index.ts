@@ -1,16 +1,23 @@
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import * as schema from "./schema";
 
 const { Pool } = pg;
 
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
-}
+let db: NodePgDatabase<typeof schema> | undefined;
 
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-export const db = drizzle(pool, { schema });
+export function getDb(): NodePgDatabase<typeof schema> {
+  if (db) return db;
+
+  const connectionString = process.env.DATABASE_URL ?? process.env.POSTGRES_URL;
+  if (!connectionString) {
+    throw new Error(
+      "DATABASE_URL must be set. Did you forget to provision a database?",
+    );
+  }
+
+  db = drizzle(new Pool({ connectionString }), { schema });
+  return db;
+}
 
 export * from "./schema";

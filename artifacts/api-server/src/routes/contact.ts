@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import nodemailer from "nodemailer";
-import { db, contactSubmissionsTable } from "@workspace/db";
+import { getDb, contactSubmissionsTable } from "@workspace/db";
 import { SubmitContactBody, SubmitContactResponse } from "@workspace/api-zod";
 
 const router: IRouter = Router();
@@ -41,7 +41,7 @@ router.post("/contact", async (req, res) => {
   const { name, email, phone, message } = parsed.data;
 
   try {
-    await db.insert(contactSubmissionsTable).values({ name, email, phone: phone ?? null, message });
+    await getDb().insert(contactSubmissionsTable).values({ name, email, phone: phone ?? null, message });
   } catch (err) {
     req.log.error({ err }, "Failed to save contact submission");
     res.status(500).json({ error: "Failed to save submission. Please try again." });
